@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/employee")
@@ -36,5 +37,10 @@ public class EmployeeController {
         Employee employee = new Employee(firstName, lastName);
         employeeServiceImpl.find(employee);
         return employee;
+    }
+
+    @GetMapping(path = "/listEmployee")
+    public Collection<Employee> listEmployee() {
+        return employeeServiceImpl.listEmployee();
     }
 }
