@@ -1,4 +1,4 @@
-package pro.sky.employeebook;
+package pro.sky.employeebook.model;
 
 import java.util.Objects;
 

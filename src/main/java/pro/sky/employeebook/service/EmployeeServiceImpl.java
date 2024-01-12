@@ -1,6 +1,13 @@
-package pro.sky.employeebook;
+package pro.sky.employeebook.service;
 
 import org.springframework.stereotype.Service;
+import pro.sky.employeebook.exception.EmployeeAlreadyAddedException;
+import pro.sky.employeebook.exception.EmployeeNotFoundException;
+import pro.sky.employeebook.exception.EmployeeStorageIsFullException;
+import pro.sky.employeebook.model.Employee;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -44,7 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeNotFoundException("EmployeeNotFound");
         }
     }
-    public List<Employee> listEmployee() {
-        return employeeList;
+    public Collection<Employee> listEmployee() {
+        return Collections.unmodifiableList(employeeList);
     }
 }

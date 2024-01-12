@@ -1,4 +1,6 @@
-package pro.sky.employeebook;
+package pro.sky.employeebook.service;
+
+import pro.sky.employeebook.model.Employee;
 
 public interface EmployeeService {
     Employee add(Employee employee);
