@@ -5,24 +5,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pro.sky.employeebook.model.Employee;
-import pro.sky.employeebook.service.EmployeeServiceImpl;
-
-import java.util.Collection;
+import pro.sky.employeebook.service.EmployeeService;
 
 @RestController
 @RequestMapping(path = "/employee")
 public class EmployeeController {
-    private final EmployeeServiceImpl employeeServiceImpl;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeServiceImpl employeeServiceImpl) {
-        this.employeeServiceImpl = employeeServiceImpl;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping(path = "/add")
     public Employee addEmployee(@RequestParam("firstName") String firstName,
                                 @RequestParam("lastName") String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        employeeServiceImpl.add(employee);
+        employeeService.add(employee);
         return employee;
     }
 
@@ -30,7 +28,7 @@ public class EmployeeController {
     public Employee removeEmployee(@RequestParam("firstName") String firstName,
                                    @RequestParam("lastName") String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        employeeServiceImpl.remove(employee);
+        employeeService.remove(employee);
         return employee;
     }
 
@@ -38,12 +36,8 @@ public class EmployeeController {
     public Employee findEmployee(@RequestParam("firstName") String firstName,
                                  @RequestParam("lastName") String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        employeeServiceImpl.find(employee);
+        employeeService.find(employee);
         return employee;
     }
 
-    @GetMapping(path = "/listEmployee")
-    public Collection<Employee> listEmployee() {
-        return employeeServiceImpl.listEmployee();
-    }
 }

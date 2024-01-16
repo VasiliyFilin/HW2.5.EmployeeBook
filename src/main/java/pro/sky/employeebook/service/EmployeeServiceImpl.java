@@ -6,27 +6,31 @@ import pro.sky.employeebook.exception.EmployeeNotFoundException;
 import pro.sky.employeebook.exception.EmployeeStorageIsFullException;
 import pro.sky.employeebook.model.Employee;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private final List<Employee> employeeList;
+    private HashMap<String, Employee> employeeMap;
 
-    public EmployeeServiceImpl(List<Employee> employeeList) {
-        this.employeeList = employeeList;
+    private String employeeKey(Employee employee) {
+        return employee.getFirstName() + employee.getLastName();
+    }
+
+
+    public EmployeeServiceImpl(HashMap<String, Employee> employeeMap) {
+        this.employeeMap = employeeMap;
     }
 
     private final int maxEmployees = 2;
 
     @Override
     public Employee add(Employee employee) throws EmployeeAlreadyAddedException, EmployeeStorageIsFullException {
-        if (employeeList.size() < maxEmployees) {
-            if (employeeList.contains(employee)) {
+        if (employeeMap.size() < maxEmployees) {
+            if (employeeMap.containsKey(employeeKey(employee))) {
                 throw new EmployeeAlreadyAddedException("EmployeeAlreadyAdded");
             }
-            employeeList.add(employee);
+            employeeMap.put(employeeKey(employee), employee);
             return employee;
         } else {
             throw new EmployeeStorageIsFullException("EmployeeStorageIsFull");
@@ -35,8 +39,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee remove(Employee employee) throws EmployeeNotFoundException {
-        if (employeeList.contains(employee)) {
-            employeeList.remove(employee);
+        if (employeeMap.containsKey(employeeKey(employee))) {
+            employeeMap.remove(employeeKey(employee));
             return employee;
         } else {
             throw new EmployeeNotFoundException("EmployeeNotFound");
@@ -45,13 +49,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee find(Employee employee) throws EmployeeNotFoundException {
-        if (employeeList.contains(employee)) {
+        if (employeeMap.containsKey(employeeKey(employee))) {
             return employee;
         } else {
             throw new EmployeeNotFoundException("EmployeeNotFound");
         }
-    }
-    public Collection<Employee> listEmployee() {
-        return Collections.unmodifiableList(employeeList);
     }
 }
