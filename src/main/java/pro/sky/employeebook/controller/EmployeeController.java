@@ -10,33 +10,39 @@ import pro.sky.employeebook.service.EmployeeService;
 @RestController
 @RequestMapping(path = "/employee")
 public class EmployeeController {
-    private final EmployeeService employeeService;
+    private final EmployeeService service;
 
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
     }
 
     @GetMapping(path = "/add")
     public Employee addEmployee(@RequestParam("firstName") String firstName,
-                                @RequestParam("lastName") String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        employeeService.add(employee);
+                                @RequestParam("lastName") String lastName,
+                                @RequestParam("salary") int salary,
+                                @RequestParam("department") int department){
+        Employee employee = new Employee(firstName, lastName, salary, department);
+        service.add(employee);
         return employee;
     }
 
     @GetMapping(path = "/remove")
     public Employee removeEmployee(@RequestParam("firstName") String firstName,
-                                   @RequestParam("lastName") String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        employeeService.remove(employee);
+                                   @RequestParam("lastName") String lastName,
+                                   @RequestParam("salary") int salary,
+                                   @RequestParam("department") int department) {
+        Employee employee = new Employee(firstName, lastName, salary, department);
+        service.remove(employee);
         return employee;
     }
 
     @GetMapping(path = "/find")
     public Employee findEmployee(@RequestParam("firstName") String firstName,
-                                 @RequestParam("lastName") String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        employeeService.find(employee);
+                                 @RequestParam("lastName") String lastName,
+                                 @RequestParam("salary") int salary,
+                                 @RequestParam("department") int department) {
+        Employee employee = new Employee(firstName, lastName, salary, department);
+        service.find(employee);
         return employee;
     }
 
