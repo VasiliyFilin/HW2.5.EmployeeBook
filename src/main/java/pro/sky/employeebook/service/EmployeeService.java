@@ -1,5 +1,6 @@
 package pro.sky.employeebook.service;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import pro.sky.employeebook.exception.EmployeeAlreadyAddedException;
 import pro.sky.employeebook.exception.EmployeeNotFoundException;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class EmployeeService {
@@ -18,10 +20,14 @@ public class EmployeeService {
     private final Map<String, Employee> employeeMap = new HashMap<>(maxEmployees);
 
     private String employeeKey(Employee employee) {
-        return employee.getFirstName() + employee.getLastName() + employee.getDepartment();
+        return capitalize(employee.getFirstName()) + capitalize(employee.getLastName()) + employee.getDepartment();
     }
 
-    public Employee add(Employee employee) throws EmployeeAlreadyAddedException, EmployeeStorageIsFullException {
+    public Employee add(Employee employee) throws
+            EmployeeAlreadyAddedException,
+            EmployeeStorageIsFullException,
+            BadRequestException {
+        checkStrings(employee.getFirstName(), employee.getLastName());
         if (employeeMap.size() < maxEmployees) {
             if (employeeMap.containsKey(employeeKey(employee))) {
                 throw new EmployeeAlreadyAddedException("EmployeeAlreadyAdded");
@@ -34,7 +40,8 @@ public class EmployeeService {
     }
 
 
-    public Employee remove(Employee employee) throws EmployeeNotFoundException {
+    public Employee remove(Employee employee) throws EmployeeNotFoundException, BadRequestException {
+        checkStrings(employee.getFirstName(), employee.getLastName());
         if (employeeMap.containsKey(employeeKey(employee))) {
             employeeMap.remove(employeeKey(employee));
             return employee;
@@ -44,7 +51,8 @@ public class EmployeeService {
     }
 
 
-    public Employee find(Employee employee) throws EmployeeNotFoundException {
+    public Employee find(Employee employee) throws EmployeeNotFoundException, BadRequestException {
+        checkStrings(employee.getFirstName(), employee.getLastName());
         if (employeeMap.containsKey(employeeKey(employee))) {
             return employee;
         } else {
@@ -54,5 +62,11 @@ public class EmployeeService {
 
     public Collection<Employee> getAll() {
         return Collections.unmodifiableCollection(employeeMap.values());
+    }
+
+    public void checkStrings(String firstName, String lastName) throws BadRequestException {
+        if (!isAlpha(firstName) || !isAlpha(lastName)) {
+            throw new BadRequestException();
+        }
     }
 }
