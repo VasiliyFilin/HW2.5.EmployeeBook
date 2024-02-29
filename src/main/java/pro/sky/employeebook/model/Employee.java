@@ -60,4 +60,8 @@ public class Employee {
                 ", department=" + department +
                 '}';
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

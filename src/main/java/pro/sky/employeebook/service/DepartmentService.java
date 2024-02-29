@@ -14,21 +14,25 @@ public class DepartmentService {
         this.employeeService = employeeService;
     }
 
-    public Optional<Employee> findMaxSalary(int department) {
+    public Map<String, Employee> findAllByDepartment(int department) {
         return employeeService.getAll().stream()
-                .filter(e -> e.getDepartment() == department)
-                .max(Comparator.comparingInt(Employee::getSalary));
+                .filter(e -> department == e.getDepartment())
+                .collect(Collectors.toMap(Employee::getFullName,e2 -> e2));
     }
-    public Optional<Employee> findMinSalary(int department) {
+    public Double salarySumByDepartment(int department) {
+        return employeeService.getAll().stream()
+                .filter(e -> e.getDepartment() == department).mapToDouble(Employee::getSalary).sum();
+    }
+    public int findMaxSalary(int department) {
         return employeeService.getAll().stream()
                 .filter(e -> e.getDepartment() == department)
-                .min(Comparator.comparingInt(Employee::getSalary));
+                .max(Comparator.comparingInt(Employee::getSalary)).orElseThrow().getSalary();
     }
 
-    public Collection<Employee> findAllByDepartment(int department) {
+    public int findMinSalary(int department) {
         return employeeService.getAll().stream()
                 .filter(e -> e.getDepartment() == department)
-                .collect(Collectors.toList());
+                .min(Comparator.comparingInt(Employee::getSalary)).orElseThrow().getSalary();
     }
 
     public Map<Integer, List<Employee>> groupByDepartments() {

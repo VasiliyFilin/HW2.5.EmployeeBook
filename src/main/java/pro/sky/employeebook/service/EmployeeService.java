@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import pro.sky.employeebook.exception.EmployeeAlreadyAddedException;
 import pro.sky.employeebook.exception.EmployeeNotFoundException;
 import pro.sky.employeebook.exception.EmployeeStorageIsFullException;
+import pro.sky.employeebook.exception.InvalidInputException;
 import pro.sky.employeebook.model.Employee;
 
 import java.util.Collection;
@@ -11,22 +12,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 
 @Service
 public class EmployeeService {
-    private static final int maxEmployees = 5;
-    private final Map<String, Employee> employeeMap = new HashMap<>(maxEmployees);
+    private static final int maxEmployees = 10;
+    final Map<String, Employee> employeeMap = new HashMap<>(maxEmployees);
 
-    private String employeeKey(Employee employee) {
-        return employee.getFirstName() + employee.getLastName() + employee.getDepartment();
-    }
 
-    public Employee add(Employee employee) throws EmployeeAlreadyAddedException, EmployeeStorageIsFullException {
+    public Employee add(Employee employee) throws EmployeeAlreadyAddedException,
+            EmployeeStorageIsFullException,
+            InvalidInputException {
+        validateInput(employee.getFirstName(), employee.getLastName());
         if (employeeMap.size() < maxEmployees) {
-            if (employeeMap.containsKey(employeeKey(employee))) {
+            if (employeeMap.containsKey(employee.getFullName())) {
                 throw new EmployeeAlreadyAddedException("EmployeeAlreadyAdded");
             }
-            employeeMap.put(employeeKey(employee), employee);
+            employeeMap.put(employee.getFullName(), employee);
             return employee;
         } else {
             throw new EmployeeStorageIsFullException("EmployeeStorageIsFull");
@@ -34,9 +37,10 @@ public class EmployeeService {
     }
 
 
-    public Employee remove(Employee employee) throws EmployeeNotFoundException {
-        if (employeeMap.containsKey(employeeKey(employee))) {
-            employeeMap.remove(employeeKey(employee));
+    public Employee remove(Employee employee) throws EmployeeNotFoundException, InvalidInputException {
+        validateInput(employee.getFirstName(), employee.getLastName());
+        if (employeeMap.containsKey(employee.getFullName())) {
+            employeeMap.remove(employee.getFullName());
             return employee;
         } else {
             throw new EmployeeNotFoundException("EmployeeNotFound");
@@ -44,8 +48,9 @@ public class EmployeeService {
     }
 
 
-    public Employee find(Employee employee) throws EmployeeNotFoundException {
-        if (employeeMap.containsKey(employeeKey(employee))) {
+    public Employee find(Employee employee) throws EmployeeNotFoundException, InvalidInputException {
+        validateInput(employee.getFirstName(), employee.getLastName());
+        if (employeeMap.containsKey(employee.getFullName())) {
             return employee;
         } else {
             throw new EmployeeNotFoundException("EmployeeNotFound");
@@ -54,5 +59,10 @@ public class EmployeeService {
 
     public Collection<Employee> getAll() {
         return Collections.unmodifiableCollection(employeeMap.values());
+    }
+    private void validateInput(String firstName, String lastName) throws InvalidInputException {
+        if (!(isAlpha(firstName) & isAlpha(lastName))){
+            throw new InvalidInputException();
+        }
     }
 }
