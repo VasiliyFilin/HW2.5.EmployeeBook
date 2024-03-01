@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 @Service
 public class EmployeeService {
     private static final int maxEmployees = 10;
-    final Map<String, Employee> employeeMap = new HashMap<>(maxEmployees);
+    private final Map<String, Employee> employeeMap = new HashMap<>(maxEmployees);
 
 
     public Employee add(Employee employee) throws EmployeeAlreadyAddedException,

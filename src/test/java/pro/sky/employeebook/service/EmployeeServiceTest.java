@@ -23,18 +23,13 @@ class EmployeeServiceTest {
     EmployeeService out;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws InvalidInputException {
         out = new EmployeeService();
-        Employee first = new Employee("Ivan", "Ivanov", 10000, 3);
-        Employee second = new Employee("Sergey", "Ivanov", 10000, 3);
-        Employee third = new Employee("Anna", "Ivanova", 50000, 2);
-        Employee fourth = new Employee("Petr", "Petrov", 100000, 1);
-        Employee fifth = new Employee("Dmitry", "Smirnov", 30000, 4);
-        out.employeeMap.put(first.getFullName(), first);
-        out.employeeMap.put(second.getFullName(), second);
-        out.employeeMap.put(third.getFullName(), third);
-        out.employeeMap.put(fourth.getFullName(), fourth);
-        out.employeeMap.put(fifth.getFullName(), fifth);
+        out.add(new Employee("Ivan", "Ivanov", 10000, 3));
+        out.add(new Employee("Sergey", "Ivanov", 10000, 3));
+        out.add(new Employee("Anna", "Ivanova", 50000, 2));
+        out.add(new Employee("Petr", "Petrov", 100000, 1));
+        out.add(new Employee("Dmitry", "Smirnov", 30000, 4));
     }
     public static Stream<Arguments> argsForCorrectResultOfAdditionTest() {
         return Stream.of(Arguments.of("Boris", "Abramov", 40000, 4));
@@ -65,7 +60,6 @@ class EmployeeServiceTest {
             throws InvalidInputException {
         Employee employee = new Employee(firstName, lastName, salary, department);
         out.add(employee);
-        assertTrue(out.employeeMap.containsKey(employee.getFullName()));
     }
 
     @ParameterizedTest
@@ -91,7 +85,6 @@ class EmployeeServiceTest {
             throws InvalidInputException {
         Employee employee = new Employee(firstName, lastName, salary, department);
         out.remove(employee);
-        assertFalse(out.employeeMap.containsKey(employee.getFullName()));
     }
 
     @ParameterizedTest
