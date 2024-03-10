@@ -1,5 +1,6 @@
 package pro.sky.employeebook.controller;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +22,11 @@ public class EmployeeController {
     public Employee addEmployee(@RequestParam("firstName") String firstName,
                                 @RequestParam("lastName") String lastName,
                                 @RequestParam("salary") int salary,
+
                                 @RequestParam("department") int department) throws InvalidInputException {
+
+                                @RequestParam("department") int department) throws BadRequestException {
+
         Employee employee = new Employee(firstName, lastName, salary, department);
         service.add(employee);
         return employee;
@@ -31,7 +36,11 @@ public class EmployeeController {
     public Employee removeEmployee(@RequestParam("firstName") String firstName,
                                    @RequestParam("lastName") String lastName,
                                    @RequestParam("salary") int salary,
+
                                    @RequestParam("department") int department) throws InvalidInputException {
+
+                                   @RequestParam("department") int department) throws BadRequestException {
+
         Employee employee = new Employee(firstName, lastName, salary, department);
         service.remove(employee);
         return employee;
@@ -41,7 +50,11 @@ public class EmployeeController {
     public Employee findEmployee(@RequestParam("firstName") String firstName,
                                  @RequestParam("lastName") String lastName,
                                  @RequestParam("salary") int salary,
+
                                  @RequestParam("department") int department) throws InvalidInputException {
+
+                                 @RequestParam("department") int department) throws BadRequestException {
+
         Employee employee = new Employee(firstName, lastName, salary, department);
         service.find(employee);
         return employee;
